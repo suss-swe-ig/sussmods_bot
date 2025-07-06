@@ -1,8 +1,6 @@
 // The Swift Programming Language
 // https://docs.swift.org/swift-book
 
-import SQLite
-
 func main() {
     if let config = getAppConfig() {
         // setup database
