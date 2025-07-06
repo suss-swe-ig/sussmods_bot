@@ -1,7 +1,10 @@
 // The Swift Programming Language
 // https://docs.swift.org/swift-book
 
+import Logging
+
 func main() {
+    let logger = Logger(label:"main")
     if let config = getAppConfig(), let db = config.getDatabaseConnection() {
         // setup database
         let tg = TgGroups(conn:db)
@@ -9,7 +12,7 @@ func main() {
         tg["ict162"] = ("Object Oriented Programming", "https://t.me/+91udwbtlw1hmYjE9")
         print(config)
     } else {
-        print("Exiting app")
+        logger.info("Exiting app")
     }
 }
 
