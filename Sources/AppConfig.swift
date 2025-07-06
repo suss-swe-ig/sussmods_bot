@@ -23,6 +23,7 @@ func getAppConfig(filename:String = "config.json") -> AppConfig? {
         return nil
     } catch {
         logger.error("unable to read \(filename)")
+        logger.error("\(error)")
         return nil
     }
 }
