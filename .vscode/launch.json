@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:sussmods_bot}",
+            "name": "Debug sussmods_bot",
+            "program": "${workspaceFolder:sussmods_bot}/.build/debug/sussmods_bot",
+            "preLaunchTask": "swift: Build Debug sussmods_bot"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:sussmods_bot}",
+            "name": "Release sussmods_bot",
+            "program": "${workspaceFolder:sussmods_bot}/.build/release/sussmods_bot",
+            "preLaunchTask": "swift: Build Release sussmods_bot"
+        }
+    ]
+}
