@@ -14,8 +14,7 @@ struct AppConfig: Codable {
 func getAppConfig(filename:String = "config.json") -> AppConfig? {
     let logger = Logger(label:"getAppConfig")
     do {
-        if let jsonData = try String(contentsOfFile: filename).data(using: .utf8) {
-            let decoded = try JSONDecoder().decode(AppConfig.self, from: jsonData) 
+        if let jsonData = try String(contentsOfFile: filename).data(using: .utf8), let decoded = try? JSONDecoder().decode(AppConfig.self, from: jsonData) {
             logger.info("successfully decoded \(filename)")
             return decoded
         }
