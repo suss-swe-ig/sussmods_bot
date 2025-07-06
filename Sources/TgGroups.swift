@@ -14,7 +14,7 @@ class TgGroups {
     let uCode = Expression<String>("unit_code")
     let uName = Expression<String>("unit_name")
     let link = Expression<String>("link")
-    var db: Connection?
+    var db: Connection
     
     init(conn:Connection) {
         db = conn
@@ -23,7 +23,7 @@ class TgGroups {
        
     private func createTable() {
         do {
-            try db!.execute(table.create { t in
+            try db.execute(table.create { t in
                 t.column(uCode, primaryKey: true)
                 t.column(uName)
                 t.column(link)
@@ -40,7 +40,7 @@ class TgGroups {
         get {
             let query = table.select(uCode, uName, link).filter(uCode == code.uppercased())
             do {
-                for tg in try db!.prepare(query) {
+                for tg in try db.prepare(query) {
                     return (tg[uName], tg[link])
                 }
             } catch {}
@@ -51,7 +51,7 @@ class TgGroups {
             if let (uname, ulink) = newValue {
                 let query = table.upsert(uCode <- code.uppercased(), uName <- uname, link <- ulink, onConflictOf: uCode)
                 do {
-                    try db!.run(query)
+                    try db.run(query)
                     logger.info("added \(code.uppercased()): \(uname), link: \(ulink)")
                 } catch {
                     logger.error("failed to update \(code.uppercased())")
@@ -59,7 +59,7 @@ class TgGroups {
             } else {
                 let query = table.filter(uCode == code.uppercased()).delete()
                 do {
-                    try db!.run(query)
+                    try db.run(query)
                     logger.info("deleted \(code.uppercased())")
                 } catch {
                     logger.error("failed to delete \(code.uppercased())")
