@@ -16,13 +16,13 @@ func getAppConfig(filename:String = "config.json") -> AppConfig? {
     do {
         if let jsonData = try String(contentsOfFile: filename).data(using: .utf8) {
             let decoded = try JSONDecoder().decode(AppConfig.self, from: jsonData) 
-            logger.info("successfully decoded config.json")
+            logger.info("successfully decoded \(filename)")
             return decoded
         }
-        logger.error("Fail to decode config.json")
+        logger.error("Fail to decode \(filename)")
         return nil
     } catch {
-        logger.error("unable to read config.json")
+        logger.error("unable to read \(filename)")
         return nil
     }
 }
