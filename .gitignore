@@ -1,4 +1,5 @@
 .DS_Store
+/.vscode
 /.build
 /Packages
 xcuserdata/
@@ -7,4 +8,5 @@ DerivedData/
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 .netrc
 db.sqlite3
+config.json
 Package.resolved
