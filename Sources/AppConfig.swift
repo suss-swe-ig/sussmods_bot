@@ -6,8 +6,8 @@ struct AppConfig: Codable {
     var APIKey: String
     var Root: [String]
     var Database: String
-    func getDatabaseConnection() -> Connection {
-        return try! Connection(Database)
+    func getDatabaseConnection() -> Connection? {
+        return try? Connection(Database)
     }
 }
 
