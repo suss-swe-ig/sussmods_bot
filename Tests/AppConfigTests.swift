@@ -26,7 +26,17 @@ struct AppConfigTests {
         } catch {
             #expect(false, "unknown error")
         } 
+    }
 
+    @Test func BadJsonTest() {
+        let configFile = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad.json")
+        do {
+            let _ = try AppConfig(from:configFile)
+        } catch AppConfigError.BadJson {
+            #expect(true)
+        } catch {
+            #expect(false, "unknown error")
+        } 
     }
 }
 
