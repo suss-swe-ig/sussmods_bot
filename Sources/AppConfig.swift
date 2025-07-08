@@ -36,7 +36,7 @@ struct AppConfig {
         }
     }
 
-    init(url:URL) throws {
+    init(from url:URL) throws {
         let logger = Logger(label:"AppConfig")
         guard FileManager().fileExists(atPath: url.absoluteString) else { 
             logger.critical("Cannot find \(url.absoluteString)")
