@@ -16,7 +16,7 @@ func main() {
         tg["ict162"] = ("Object Oriented Programming", "https://t.me/+91udwbtlw1hmYjE9")
         print(config)
     } else {
-        logger.error("failed to connect to database. please check \(configFile.absoluteString)")
+        logger.critical("failed to connect to database. please check \(configFile.absoluteString)")
         logger.info("Exiting app")
     }
 }

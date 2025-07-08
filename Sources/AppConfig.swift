@@ -44,11 +44,11 @@ struct AppConfig {
             throw AppConfigError.NoConfigFile
         }
         if let jsonData = try? String(contentsOfFile: url.absoluteString).data(using: .utf8), let decoded = try? JSONDecoder().decode(Config.self, from: jsonData) {
-            guard decoded.APIKey.isEmpty else { 
+            guard !decoded.APIKey.isEmpty else { 
                 logger.critical("Missing API Key")
                 throw AppConfigError.MissingAPIKey 
             }
-            guard decoded.Database.isEmpty else { 
+            guard !decoded.Database.isEmpty else { 
                 logger.critical("Missing Database File")
                 throw AppConfigError.MissingDatabase 
             }
