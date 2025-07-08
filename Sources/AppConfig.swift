@@ -2,27 +2,49 @@ import Logging
 import SQLite
 import Foundation
 
-struct AppConfig: Codable {
+enum AppConfigError: Error {
+    case BadJson
+}
+
+struct Config: Codable {
     var APIKey: String
     var Root: [String]
     var Database: String
-    func getDatabaseConnection() -> Connection? {
-        return try? Connection(Database)
-    }
 }
 
-func getAppConfig(url:URL) -> AppConfig? {
-    let logger = Logger(label:"getAppConfig")
-    do {
-        if let jsonData = try String(contentsOfFile: url.absoluteString).data(using: .utf8), let decoded = try? JSONDecoder().decode(AppConfig.self, from: jsonData) {
-            logger.info("successfully decoded \(url.absoluteString)")
-            return decoded
+struct AppConfig {
+    var config: Config
+
+    var APIKey: String {
+        get {
+            config.APIKey
         }
-        logger.error("Fail to decode \(url.absoluteString)")
-        return nil
-    } catch {
-        logger.error("unable to read \(url.absoluteString)")
-        logger.error("\(error)")
-        return nil
+    }
+
+    var Root: [String] {
+        get {
+            config.Root
+        }
+    }
+
+    var Database: String {
+        get {
+            config.Database
+        }
+    }
+
+    init(url:URL) throws {
+        let logger = Logger(label:"AppConfig")
+        if let jsonData = try? String(contentsOfFile: url.absoluteString).data(using: .utf8), let decoded = try? JSONDecoder().decode(Config.self, from: jsonData) {
+            config = decoded
+            logger.info("successfully decoded \(url.absoluteString)")
+        } else {
+            logger.error("unable to read or decode \(url.absoluteString)")
+            throw AppConfigError.BadJson
+        }
+    }
+
+    func getDatabaseConnection() -> Connection? {
+        return try? Connection(Database) 
     }
 }
