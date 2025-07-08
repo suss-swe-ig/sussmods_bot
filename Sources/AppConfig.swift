@@ -4,6 +4,7 @@ import Foundation
 
 enum AppConfigError: Error {
     case BadJson
+    case NoConfigFile
 }
 
 struct Config: Codable {
@@ -35,11 +36,15 @@ struct AppConfig {
 
     init(url:URL) throws {
         let logger = Logger(label:"AppConfig")
+        let fm = FileManager()
+        guard fm.fileExists(atPath: url.absoluteString) else { 
+            logger.critical("Cannot find \(url.absoluteString)")
+            throw AppConfigError.NoConfigFile
+        }
         if let jsonData = try? String(contentsOfFile: url.absoluteString).data(using: .utf8), let decoded = try? JSONDecoder().decode(Config.self, from: jsonData) {
             config = decoded
-            logger.info("successfully decoded \(url.absoluteString)")
         } else {
-            logger.error("unable to read or decode \(url.absoluteString)")
+            logger.critical("unable to read or decode \(url.absoluteString)")
             throw AppConfigError.BadJson
         }
     }
