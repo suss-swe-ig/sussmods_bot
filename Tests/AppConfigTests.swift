@@ -29,14 +29,22 @@ struct AppConfigTests {
     }
 
     @Test func BadJsonTest() {
-        let configFile = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad.json")
-        do {
-            let _ = try AppConfig(from:configFile)
-        } catch AppConfigError.BadJson {
-            #expect(true)
-        } catch {
-            #expect(false, "unknown error")
-        } 
+        let c0 = (URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad0.json"), "Broken Syntax")
+        let c1 = (URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad1.json"), "Missing API Key")
+        let c2 = (URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad2.json"), "Misspelled API Key")
+        for (cfile, desc) in [c0, c1, c2] {
+            do {
+                let _ = try AppConfig(from:cfile)
+            } catch AppConfigError.BadJson {
+                #expect(true)
+            } catch {
+                #expect(false, "\(desc)")
+            } 
+        }
+    }
+
+    @Test func NoAPIKeyTest() {
+
     }
 }
 
