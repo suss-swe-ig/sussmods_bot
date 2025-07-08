@@ -13,7 +13,7 @@ struct Config: Codable {
 }
 
 struct AppConfig {
-    var config: Config
+    private var config: Config
 
     var APIKey: String {
         get {
