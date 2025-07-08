@@ -38,8 +38,7 @@ struct AppConfig {
 
     init(url:URL) throws {
         let logger = Logger(label:"AppConfig")
-        let fm = FileManager()
-        guard fm.fileExists(atPath: url.absoluteString) else { 
+        guard FileManager().fileExists(atPath: url.absoluteString) else { 
             logger.critical("Cannot find \(url.absoluteString)")
             throw AppConfigError.NoConfigFile
         }
