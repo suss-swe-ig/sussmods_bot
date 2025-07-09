@@ -19,8 +19,8 @@ func main() {
         }
     } else {
         logger.critical("failed to connect to database. please check \(configFile.absoluteString)")
-        logger.info("Exiting app")
     }
+    logger.info("Exiting app")
 }
 
 
