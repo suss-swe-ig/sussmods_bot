@@ -111,11 +111,14 @@ class TgGroups: Sequence {
         let query = table.select(uCode)
         return TgGroupsIterator(rows: try? db.prepare(query), column: uCode)
     }
+
+    /// Perform search on unit name
+    /// - Paramter terms is a list of search terms
     func search(terms:[String]) -> [String] {
         var likes = Expression<Bool>(value:true)
         for term in terms {
             if term.isAlphanumeric {
-                likes = likes && uName.like("%" + term + "%")
+                likes = likes || uName.like("%" + term + "%")
             }
         }
         do {
