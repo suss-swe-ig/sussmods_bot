@@ -27,7 +27,11 @@ let package = Package(
             dependencies:[
                 "sussmods_bot",
                 .product(name: "Testing", package: "swift-testing")
-            ]
-        )
+            ],
+            exclude: [
+                "bad0.json", "bad1.json", "bad2.json", "bad3.json", "bad4.json",
+                "good0.json", "good1.json", "good2.json", "empty.json"
+            ]),
+        
     ]
 )
