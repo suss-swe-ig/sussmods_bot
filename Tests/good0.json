@@ -1,0 +1,5 @@
+{
+    "APIKey": "1234",
+    "Root": ["geodome"],
+    "Database": "db.sqlite3"
+}

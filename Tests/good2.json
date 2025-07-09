@@ -1,0 +1,7 @@
+{
+    "Database": "db.sqlite3",
+    "APIKey": "1234",
+    "Root": ["geodome"],
+    "Hello": "World",
+    "Children": 100
+}

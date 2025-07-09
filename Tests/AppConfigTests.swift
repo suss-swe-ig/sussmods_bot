@@ -118,6 +118,43 @@ struct AppConfigTests {
     }
 
     @Test func goodJsonTest() {
+        let logger = Logger(label:"AppConfigTests:goodJsonTest")
+
+        let c0 = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/good0.json")
+        let desc0 = "Malformed root"
+        do {
+            let a = try AppConfig(from:c0)
+            #expect(a.APIKey == "1234", Comment(stringLiteral: "Wrong API Key"))
+            #expect(a.Database == "db.sqlite3", Comment(stringLiteral: "Wrong database"))
+            #expect(a.Root.count == 1 && a.Root[0] == "geodome", Comment(stringLiteral:"Wrong root"))
+        } catch {
+            logger.info("\(desc0) triggered error")
+            #expect(Bool(false))
+        }
+
+        let c1 = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/good1.json")
+        let desc1 = "Different order of fields"
+        do {
+            let a = try AppConfig(from:c1)
+            #expect(a.APIKey == "1234", Comment(stringLiteral: "Wrong API Key"))
+            #expect(a.Database == "db.sqlite3", Comment(stringLiteral: "Wrong database"))
+            #expect(a.Root.count == 1 && a.Root[0] == "geodome", Comment(stringLiteral:"Wrong root"))
+        } catch {
+            logger.info("\(desc1) triggered error")
+            #expect(Bool(false))
+        }
+
+        let c2 = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/good2.json")
+        let desc2 = "Extra fields"
+        do {
+            let a = try AppConfig(from:c2)
+            #expect(a.APIKey == "1234", Comment(stringLiteral: "Wrong API Key"))
+            #expect(a.Database == "db.sqlite3", Comment(stringLiteral: "Wrong database"))
+            #expect(a.Root.count == 1 && a.Root[0] == "geodome", Comment(stringLiteral:"Wrong root"))
+        } catch {
+            logger.info("\(desc2) triggered error")
+            #expect(Bool(false))
+        }
 
     }
 }
