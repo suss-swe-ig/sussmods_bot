@@ -8,10 +8,26 @@
 import SQLite
 import Logging
 
+struct TgGroupsIterator: IteratorProtocol {
+    typealias Element = String
+    var dbRows: AnyIterator<Row>? = nil
+    var col: Expression<String>
+
+    init(rows: AnySequence<Row>?, column:Expression<String>) {
+        if let r = rows {
+            dbRows = r.makeIterator()
+        }
+        col = column
+    }
+
+    mutating func next() -> String? {
+        return dbRows?.next()?[col]
+    }
+}
 /// TgGroups is a key-value store for Telegram Groups. 
 /// The key is the unit code while the value is a pair of 
 /// String representing the unit name and its telegram link.
-class TgGroups {
+class TgGroups: Sequence {
     let logger = Logger(label: "TgGroups")
     let table = Table("telegram_groups")
     let uCode = Expression<String>("unit_code")
@@ -91,6 +107,10 @@ class TgGroups {
         return []
     }
 
+    func makeIterator() -> TgGroupsIterator {
+        let query = table.select(uCode)
+        return TgGroupsIterator(rows: try? db.prepare(query), column: uCode)
+    }
 
 }
 
