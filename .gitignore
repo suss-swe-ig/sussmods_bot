@@ -7,6 +7,6 @@ DerivedData/
 .swiftpm/configuration/registries.json
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 .netrc
-db.sqlite3
+*.sqlite3
 config.json
 Package.resolved
