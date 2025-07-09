@@ -5,8 +5,9 @@ import Foundation
 enum AppConfigError: Error {
     case BadJson
     case NoConfigFile
-    case MissingAPIKey
-    case MissingDatabase
+    case EmptyAPIKey
+    case EmptyDatabase
+    case EmptyFile
 }
 
 struct Config: Codable {
@@ -15,6 +16,7 @@ struct Config: Codable {
     var Database: String
 }
 
+// testing
 struct AppConfig {
     private var config: Config
 
@@ -42,19 +44,28 @@ struct AppConfig {
             logger.critical("Cannot find \(url.absoluteString)")
             throw AppConfigError.NoConfigFile
         }
-        if let jsonData = try? String(contentsOfFile: url.absoluteString).data(using: .utf8), let decoded = try? JSONDecoder().decode(Config.self, from: jsonData) {
-            guard !decoded.APIKey.isEmpty else { 
-                logger.critical("Missing API Key")
-                throw AppConfigError.MissingAPIKey 
+        if let json = try? String(contentsOfFile: url.absoluteString) {
+            guard json.count > 0 else {
+                throw AppConfigError.EmptyFile
             }
-            guard !decoded.Database.isEmpty else { 
-                logger.critical("Missing Database File")
-                throw AppConfigError.MissingDatabase 
+            let jsonData = json.data(using: .utf8)!
+            if let decoded = try? JSONDecoder().decode(Config.self, from: jsonData) {
+                guard !decoded.APIKey.isEmpty else { 
+                    logger.critical("Missing API Key")
+                    throw AppConfigError.EmptyAPIKey 
+                }
+                guard !decoded.Database.isEmpty else { 
+                    logger.critical("Missing Database File")
+                    throw AppConfigError.EmptyDatabase 
+                }
+                config = decoded 
+            } else {
+                logger.critical("unable to decode \(url.absoluteString)")
+                throw AppConfigError.BadJson
             }
-            config = decoded 
         } else {
-            logger.critical("unable to read or decode \(url.absoluteString)")
-            throw AppConfigError.BadJson
+            logger.critical("unable to read \(url.absoluteString)")
+            throw AppConfigError.NoConfigFile
         }
     }
 
