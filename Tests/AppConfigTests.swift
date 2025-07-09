@@ -1,16 +1,19 @@
 import Testing 
 import Foundation 
+import Logging 
 
 @testable import sussmods_bot
 
 struct AppConfigTests {
     let fm = FileManager()
+    let logger = Logger(label:"AppConfigTests")
 
     @Test func MissingFileTest() {
         let configFile = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/nosuchfile.json")
         do {
             let _ = try AppConfig(from:configFile)
         } catch AppConfigError.NoConfigFile {
+            logger.info("MissingFileTest: No config file detected")
             #expect(true)
         } catch {
             #expect(Bool(false), "unknown error \(error)")
@@ -19,9 +22,11 @@ struct AppConfigTests {
 
     @Test func EmptyFileTest() {
         let configFile = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/empty.json")
+        let desc = "Empty json file"
         do {
             let _ = try AppConfig(from:configFile)
         } catch AppConfigError.EmptyFile {
+            logger.info("EmptyfileTest: \(desc)")
             #expect(true)
         } catch {
             #expect(Bool(false), Comment(stringLiteral:"empty config file"))
@@ -34,6 +39,7 @@ struct AppConfigTests {
         do {
             let _ = try AppConfig(from:c1)
         } catch AppConfigError.EmptyAPIKey {
+            logger.info("EmptyFieldTest: Empty API Key detected")
             #expect(true)
         } catch {
             #expect(Bool(false), Comment(stringLiteral: desc1))
@@ -43,6 +49,7 @@ struct AppConfigTests {
         do {
             let _ = try AppConfig(from:c2)
         } catch AppConfigError.EmptyDatabase {
+            logger.info("EmptyFieldTest: Empty Databas detected")
             #expect(true)
         } catch {
             #expect(Bool(false), Comment(stringLiteral: desc2))
@@ -56,6 +63,7 @@ struct AppConfigTests {
         do {
             let _ = try AppConfig(from:c0)
         } catch AppConfigError.BadJson {
+            logger.info("BadJsonTest: \(desc0) detected")
             #expect(true)
         } catch {
             #expect(Bool(false), Comment(stringLiteral: desc0))
@@ -65,6 +73,7 @@ struct AppConfigTests {
         do {
             let _ = try AppConfig(from:c3)
         } catch AppConfigError.BadJson {
+            logger.info("BadJsonTest: \(desc3) detected")
             #expect(true)
         } catch {
             #expect(Bool(false), Comment(stringLiteral:desc3))
@@ -74,6 +83,7 @@ struct AppConfigTests {
         do {
             let _ = try AppConfig(from:c4)
         } catch AppConfigError.BadJson {
+            logger.info("BadJsonTest: \(desc4) detected")
             #expect(true)
         } catch {
             #expect(Bool(false), Comment(stringLiteral:desc4))
@@ -90,6 +100,9 @@ struct AppConfigTests {
         }
     }
 
+    @Test func goodJsonTest() {
+
+    }
 }
 
 
