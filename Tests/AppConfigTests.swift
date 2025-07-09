@@ -10,12 +10,14 @@ struct AppConfigTests {
 
     @Test func MissingFileTest() {
         let configFile = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/nosuchfile.json")
+        let desc = "No config file"
         do {
             let _ = try AppConfig(from:configFile)
         } catch AppConfigError.NoConfigFile {
-            logger.info("MissingFileTest: No config file detected")
+            logger.info("MissingFileTest: \(desc) detected")
             #expect(true)
         } catch {
+            logger.info("MissingFileTest: \(desc) not detected")
             #expect(Bool(false), "unknown error \(error)")
         } 
     }
@@ -26,9 +28,10 @@ struct AppConfigTests {
         do {
             let _ = try AppConfig(from:configFile)
         } catch AppConfigError.EmptyFile {
-            logger.info("EmptyfileTest: \(desc)")
+            logger.info("EmptyfileTest: \(desc) detected")
             #expect(true)
         } catch {
+            logger.info("EmptyFileTest: \(desc) not dfetected")
             #expect(Bool(false), Comment(stringLiteral:"empty config file"))
         } 
     }
@@ -39,9 +42,10 @@ struct AppConfigTests {
         do {
             let _ = try AppConfig(from:c1)
         } catch AppConfigError.EmptyAPIKey {
-            logger.info("EmptyFieldTest: Empty API Key detected")
+            logger.info("EmptyFieldTest: \(desc1) detected")
             #expect(true)
         } catch {
+            logger.info("EmptyFieldTest: \(desc1) not detected")
             #expect(Bool(false), Comment(stringLiteral: desc1))
         }
         let c2 = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad2.json")
@@ -49,9 +53,10 @@ struct AppConfigTests {
         do {
             let _ = try AppConfig(from:c2)
         } catch AppConfigError.EmptyDatabase {
-            logger.info("EmptyFieldTest: Empty Databas detected")
+            logger.info("EmptyFieldTest: \(desc2) detected")
             #expect(true)
         } catch {
+            logger.info("EmptyFieldTest: \(desc2) not detected")
             #expect(Bool(false), Comment(stringLiteral: desc2))
         }
 
