@@ -8,7 +8,7 @@
 import SQLite
 import Logging
 
-struct TgGroupsIterator: IteratorProtocol {
+struct TgGroupsIterator: Sequence, IteratorProtocol {
     typealias Element = String
     let iterator: AnyIterator<Row>?
     let col: Expression<String>
@@ -16,6 +16,10 @@ struct TgGroupsIterator: IteratorProtocol {
     init(rows: AnySequence<Row>?, column:Expression<String>) {
         iterator = rows?.makeIterator()
         col = column
+    }
+
+    func makeIterator() -> TgGroupsIterator {
+        return self
     }
 
     mutating func next() -> String? {
@@ -93,18 +97,12 @@ class TgGroups: Sequence {
     /// This function retrieves the list of telegram group of which their unit code starts with the given prefix
     /// - Parameter prefix: prefix for unit code
     /// - Returns: A list of unit code
-    func startsWith(prefix:String) -> [String] {
+    func startsWith(prefix:String) -> TgGroupsIterator {
         if prefix.isAlphanumeric {
             let query = table.select(uCode).filter(uCode.like(prefix+"%"))
-            var result: [String] = []
-            do {
-                for r in try db.prepare(query) {
-                    result.append(r[uCode])
-                }
-                return result
-            } catch {}
+            return TgGroupsIterator(rows: try? db.prepare(query), column:uCode)
         }
-        return []
+        return TgGroupsIterator(rows:nil, column:uCode)
     }
 
     func makeIterator() -> TgGroupsIterator {
@@ -114,7 +112,7 @@ class TgGroups: Sequence {
 
     /// Perform search on unit name
     /// - Paramter terms is a list of search terms
-    func search(terms:[String]) -> [String] {
+    func search(terms:[String]) -> TgGroupsIterator {
         if terms.count > 0 {
             var likes: Expression<Bool>? = nil
             for term in terms {
@@ -127,17 +125,11 @@ class TgGroups: Sequence {
                 }
             }
             if let likes_ = likes {
-                do {
-                    let query = table.select(uCode).filter(likes_)
-                    var result: [String] = []
-                    for row in try db.prepare(query) {
-                        result.append(row[uCode])
-                    }
-                    return result
-                } catch {}
+                let query = table.select(uCode).filter(likes_)
+                return TgGroupsIterator(rows:try? db.prepare(query), column: uCode)
             }
         }
-        return []
+        return TgGroupsIterator(rows:nil, column: uCode)
     }
 }
 
