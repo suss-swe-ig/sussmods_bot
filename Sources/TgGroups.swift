@@ -25,6 +25,15 @@ struct TgGroupsIterator: Sequence, IteratorProtocol {
     mutating func next() -> String? {
         return iterator?.next()?[col]
     }
+
+    /// This method converts the iterator to a list of unit codes
+    func toList() -> [String] {
+        var result: [String] = []
+        for code in self {
+            result.append(code)
+        }
+        return result
+    }
 }
 
 
