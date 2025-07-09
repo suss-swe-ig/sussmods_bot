@@ -14,9 +14,7 @@ struct TgGroupsIterator: IteratorProtocol {
     var col: Expression<String>
 
     init(rows: AnySequence<Row>?, column:Expression<String>) {
-        if let r = rows {
-            iterator = r.makeIterator()
-        }
+        iterator = rows?.makeIterator()
         col = column
     }
 
