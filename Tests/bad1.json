@@ -1,6 +1,6 @@
 {
     "Root": ["geodome"],
-    "APIKey": "740269r0",
+    "APIKey": "",
     "Database": "db.sqlite3",
     "hello": "world"
 }

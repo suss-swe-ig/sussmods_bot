@@ -1,5 +1,5 @@
 {
     "Root": [],
-    "Database": "db.sqlite3",
-    "hello": "world"
+    "Database": "",
+    "APIKey": "world"
 }
