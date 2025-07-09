@@ -111,6 +111,20 @@ class TgGroups: Sequence {
         let query = table.select(uCode)
         return TgGroupsIterator(rows: try? db.prepare(query), column: uCode)
     }
-
+    func search(terms:[String]) -> [String] {
+        var likes = Expression<Bool>(value:true)
+        for term in terms {
+            likes = likes && uName.like("%" + term + "%")
+        }
+        do {
+            let query = table.select(uCode).filter(likes)
+            var result: [String] = []
+            for row in try db.prepare(query) {
+                result.append(row[uCode])
+            }
+            return result
+        } catch {}
+        return []
+    }
 }
 
