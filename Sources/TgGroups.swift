@@ -114,7 +114,9 @@ class TgGroups: Sequence {
     func search(terms:[String]) -> [String] {
         var likes = Expression<Bool>(value:true)
         for term in terms {
-            likes = likes && uName.like("%" + term + "%")
+            if term.isAlphanumeric {
+                likes = likes && uName.like("%" + term + "%")
+            }
         }
         do {
             let query = table.select(uCode).filter(likes)
