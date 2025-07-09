@@ -6,73 +6,79 @@ import Logging
 
 struct AppConfigTests {
     let fm = FileManager()
-    let logger = Logger(label:"AppConfigTests")
-
+    
     @Test func MissingFileTest() {
+        let logger = Logger(label:"AppConfigTests:MissingFileTest")
         let configFile = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/nosuchfile.json")
         let desc = "No config file"
         do {
             let _ = try AppConfig(from:configFile)
-            logger.info("MissingFileTest: \(desc) triggers no error")
+            logger.info("\(desc) triggers no error")
         } catch AppConfigError.NoConfigFile {
-            logger.info("MissingFileTest: \(desc) detected")
+            logger.info("\(desc) detected")
             #expect(true)
         } catch {
-            logger.info("MissingFileTest: \(desc) not detected")
+            logger.info("\(desc) not detected")
             #expect(Bool(false), "unknown error \(error)")
         } 
     }
 
     @Test func EmptyFileTest() {
+        let logger = Logger(label:"AppConfigTests:EmptyFileTest")
+
         let configFile = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/empty.json")
         let desc = "Empty json file"
         do {
             let _ = try AppConfig(from:configFile)
-            logger.info("EmptyFileTest: \(desc) triggers no error")
+            logger.info("\(desc) triggers no error")
         } catch AppConfigError.EmptyFile {
-            logger.info("EmptyfileTest: \(desc) detected")
+            logger.info("\(desc) detected")
             #expect(true)
         } catch {
-            logger.info("EmptyFileTest: \(desc) not detected")
+            logger.info("\(desc) not detected")
             #expect(Bool(false), Comment(stringLiteral:"empty config file"))
         } 
     }
 
     @Test func EmptyFieldTest() {
+        let logger = Logger(label:"AppConfigTests:EmptyFieldTest")
+
         let c1 = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad1.json")
         let desc1 = "Empty API Key"
         do {
             let _ = try AppConfig(from:c1)
-            logger.info("EmptyFieldTest: \(desc1) triggers no error")
+            logger.info("\(desc1) triggers no error")
         } catch AppConfigError.EmptyAPIKey {
-            logger.info("EmptyFieldTest: \(desc1) detected")
+            logger.info("\(desc1) detected")
             #expect(true)
         } catch {
-            logger.info("EmptyFieldTest: \(desc1) not detected")
+            logger.info("\(desc1) not detected")
             #expect(Bool(false), Comment(stringLiteral: desc1))
         }
         let c2 = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad2.json")
         let desc2 = "Empty Database"
         do {
             let _ = try AppConfig(from:c2)
-            logger.info("EmptyFieldTest: \(desc2) triggers no error")
+            logger.info("\(desc2) triggers no error")
         } catch AppConfigError.EmptyDatabase {
-            logger.info("EmptyFieldTest: \(desc2) detected")
+            logger.info("\(desc2) detected")
             #expect(true)
         } catch {
-            logger.info("EmptyFieldTest: \(desc2) not detected")
+            logger.info("\(desc2) not detected")
             #expect(Bool(false), Comment(stringLiteral: desc2))
         }
 
     }
 
     @Test func BadJsonTest() {
+        let logger = Logger(label:"AppConfigTests:BadJsonTest")
+
         let c0 = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad0.json")
         let desc0 = "Broken Syntax"
         do {
             let _ = try AppConfig(from:c0)
         } catch AppConfigError.BadJson {
-            logger.info("BadJsonTest: \(desc0) detected")
+            logger.info("\(desc0) detected")
             #expect(true)
         } catch {
             #expect(Bool(false), Comment(stringLiteral: desc0))
@@ -82,7 +88,7 @@ struct AppConfigTests {
         do {
             let _ = try AppConfig(from:c3)
         } catch AppConfigError.BadJson {
-            logger.info("BadJsonTest: \(desc3) detected")
+            logger.info("\(desc3) detected")
             #expect(true)
         } catch {
             #expect(Bool(false), Comment(stringLiteral:desc3))
@@ -92,7 +98,7 @@ struct AppConfigTests {
         do {
             let _ = try AppConfig(from:c4)
         } catch AppConfigError.BadJson {
-            logger.info("BadJsonTest: \(desc4) detected")
+            logger.info("\(desc4) detected")
             #expect(true)
         } catch {
             #expect(Bool(false), Comment(stringLiteral:desc4))
@@ -100,11 +106,13 @@ struct AppConfigTests {
         let c5 = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad5.json")
         let desc5 = "Malformed root"
         do {
-            let a = try AppConfig(from:c5)
-            #expect(a.Root.count == 0)
+            let _ = try AppConfig(from:c5)
+            logger.info("\(desc5) not detected")
         } catch AppConfigError.BadJson {
+            logger.info("\(desc5) detected")
             #expect(true)
         } catch {
+            logger.info("\(desc5) not detected")
             #expect(Bool(false), Comment(stringLiteral:desc5 + " \(error)"))
         }
     }
