@@ -14,8 +14,8 @@ func main() {
         // tg["ict162"] = ("Object Oriented Programming", "https://t.me/+91udwbtlw1hmYjE9")
         let (uname, link) = tg["ict133"]!
         print("ict133: \(uname) at \(link)")
-        for code in tg.search(terms:["object"]) {
-            print("search programming \(code)")
+        for code in tg.search(terms:["struc"]) {
+            print("search programming \(code) \(tg[code]!.0)")
         }
     } else {
         logger.critical("failed to connect to database. please check \(configFile.absoluteString)")
