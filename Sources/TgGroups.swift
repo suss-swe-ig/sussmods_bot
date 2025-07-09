@@ -8,6 +8,9 @@
 import SQLite
 import Logging
 
+/// TgGroups is a key-value store for Telegram Groups. 
+/// The key is the unit code while the value is a pair of 
+/// String representing the unit name and its telegram link.
 class TgGroups {
     let logger = Logger(label: "TgGroups")
     let table = Table("telegram_groups")
@@ -87,5 +90,7 @@ class TgGroups {
         }
         return []
     }
+
+
 }
 
