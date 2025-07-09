@@ -118,7 +118,7 @@ class TgGroups: Sequence {
         if terms.count > 0 {
             var likes: Expression<Bool>? = nil
             for term in terms {
-                if term.isAlphanumeric {
+                if term.isAlphanumeric && term.count > 1 {
                     if likes == nil {
                         likes = uName.like("%" + term + "%")
                     } else {
