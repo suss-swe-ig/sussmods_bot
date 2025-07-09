@@ -16,6 +16,8 @@ class TgGroups {
     let link = Expression<String>("link")
     var db: Connection
     
+    /// Constructor
+    /// - Parameter conn: An sqlite3 database connection 
     init(conn:Connection) {
         db = conn
         createTable()
@@ -69,6 +71,9 @@ class TgGroups {
         }
     }
 
+    /// This function retrieves the list of telegram group of which their unit code starts with the given prefix
+    /// - Parameter prefix: prefix for unit code
+    /// - Returns: A list of unit code
     func startsWith(prefix:String) -> [String] {
         if prefix.isAlphanumeric {
             let query = table.select(uCode).filter(uCode.like(prefix+"%"))
