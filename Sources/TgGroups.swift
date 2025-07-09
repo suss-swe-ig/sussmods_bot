@@ -48,7 +48,7 @@ class TgGroups: Sequence {
        
     private func createTable() {
         do {
-            try db.execute(table.create { t in
+            try db.execute(table.create { (t:TableBuilder) in
                 t.column(uCode, primaryKey: true)
                 t.column(uName)
                 t.column(link)
