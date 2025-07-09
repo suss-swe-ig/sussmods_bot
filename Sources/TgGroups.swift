@@ -68,4 +68,19 @@ class TgGroups {
         
         }
     }
+
+    func startsWith(prefix:String) -> [String] {
+        if prefix.isAlphanumeric {
+            let query = table.select(uCode).filter(uCode.like(prefix+"%"))
+            var result: [String] = []
+            do {
+                for r in try db.prepare(query) {
+                    result.append(r[uCode])
+                }
+                return result
+            } catch {}
+        }
+        return []
+    }
 }
+
