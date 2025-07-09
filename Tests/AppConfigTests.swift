@@ -13,6 +13,7 @@ struct AppConfigTests {
         let desc = "No config file"
         do {
             let _ = try AppConfig(from:configFile)
+            logger.info("MissingFileTest: \(desc) triggers no error")
         } catch AppConfigError.NoConfigFile {
             logger.info("MissingFileTest: \(desc) detected")
             #expect(true)
@@ -27,11 +28,12 @@ struct AppConfigTests {
         let desc = "Empty json file"
         do {
             let _ = try AppConfig(from:configFile)
+            logger.info("EmptyFileTest: \(desc) triggers no error")
         } catch AppConfigError.EmptyFile {
             logger.info("EmptyfileTest: \(desc) detected")
             #expect(true)
         } catch {
-            logger.info("EmptyFileTest: \(desc) not dfetected")
+            logger.info("EmptyFileTest: \(desc) not detected")
             #expect(Bool(false), Comment(stringLiteral:"empty config file"))
         } 
     }
@@ -41,6 +43,7 @@ struct AppConfigTests {
         let desc1 = "Empty API Key"
         do {
             let _ = try AppConfig(from:c1)
+            logger.info("EmptyFieldTest: \(desc1) triggers no error")
         } catch AppConfigError.EmptyAPIKey {
             logger.info("EmptyFieldTest: \(desc1) detected")
             #expect(true)
@@ -52,6 +55,7 @@ struct AppConfigTests {
         let desc2 = "Empty Database"
         do {
             let _ = try AppConfig(from:c2)
+            logger.info("EmptyFieldTest: \(desc2) triggers no error")
         } catch AppConfigError.EmptyDatabase {
             logger.info("EmptyFieldTest: \(desc2) detected")
             #expect(true)
