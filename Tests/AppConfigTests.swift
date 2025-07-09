@@ -13,7 +13,7 @@ struct AppConfigTests {
         } catch AppConfigError.NoConfigFile {
             #expect(true)
         } catch {
-            #expect(false, "unknown error \(error)")
+            #expect(Bool(false), "unknown error \(error)")
         } 
     }
 
@@ -24,28 +24,32 @@ struct AppConfigTests {
         } catch AppConfigError.EmptyFile {
             #expect(true)
         } catch {
-            #expect(false, "unknown error")
+            #expect(Bool(false), Comment(stringLiteral:"empty config file"))
         } 
     }
 
-    @Test func BadJsonTest() {
-        let c0 = (URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad0.json"), "Broken Syntax")
-        let c1 = (URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad1.json"), "Missing API Key")
-        let c2 = (URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad2.json"), "Misspelled API Key")
-        for (cfile, desc) in [c0, c1, c2] {
-            do {
-                let _ = try AppConfig(from:cfile)
-            } catch AppConfigError.BadJson {
-                #expect(true)
-            } catch {
-                #expect(false, "\(desc)")
-            } 
+    @Test func EmptyFieldTest() {
+        let c1 = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad1.json")
+        let desc1 = "Empty API Key"
+        do {
+            let _ = try AppConfig(from:c1)
+        } catch AppConfigError.EmptyAPIKey {
+            #expect(true)
+        } catch {
+            #expect(Bool(false), Comment(stringLiteral: desc1))
         }
+        let c2 = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad2.json")
+        let desc2 = "Empty Database"
+        do {
+            let _ = try AppConfig(from:c2)
+        } catch AppConfigError.EmptyDatabase {
+            #expect(true)
+        } catch {
+            #expect(Bool(false), Comment(stringLiteral: desc2))
+        }
+
     }
 
-    @Test func NoAPIKeyTest() {
-
-    }
 }
 
 
