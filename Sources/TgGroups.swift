@@ -115,20 +115,28 @@ class TgGroups: Sequence {
     /// Perform search on unit name
     /// - Paramter terms is a list of search terms
     func search(terms:[String]) -> [String] {
-        var likes = Expression<Bool>(value:true)
-        for term in terms {
-            if term.isAlphanumeric {
-                likes = likes && uName.like("%" + term + "%")
+        if terms.count > 0 {
+            var likes: Expression<Bool>? = nil
+            for term in terms {
+                if term.isAlphanumeric {
+                    if likes == nil {
+                        likes = uName.like("%" + term + "%")
+                    } else {
+                        likes = likes! || uName.like("%" + term + "%")
+                    }
+                }
+            }
+            if let likes_ = likes {
+                do {
+                    let query = table.select(uCode).filter(likes_)
+                    var result: [String] = []
+                    for row in try db.prepare(query) {
+                        result.append(row[uCode])
+                    }
+                    return result
+                } catch {}
             }
         }
-        do {
-            let query = table.select(uCode).filter(likes)
-            var result: [String] = []
-            for row in try db.prepare(query) {
-                result.append(row[uCode])
-            }
-            return result
-        } catch {}
         return []
     }
 }
