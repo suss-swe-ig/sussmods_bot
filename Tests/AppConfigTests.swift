@@ -50,6 +50,46 @@ struct AppConfigTests {
 
     }
 
+    @Test func BadJsonTest() {
+        let c0 = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad0.json")
+        let desc0 = "Broken Syntax"
+        do {
+            let _ = try AppConfig(from:c0)
+        } catch AppConfigError.BadJson {
+            #expect(true)
+        } catch {
+            #expect(Bool(false), Comment(stringLiteral: desc0))
+        }
+        let c3 = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad3.json")
+        let desc3 = "Missing APIKey field"
+        do {
+            let _ = try AppConfig(from:c3)
+        } catch AppConfigError.BadJson {
+            #expect(true)
+        } catch {
+            #expect(Bool(false), Comment(stringLiteral:desc3))
+        }
+        let c4 = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad4.json")
+        let desc4 = "Missing Database field"
+        do {
+            let _ = try AppConfig(from:c4)
+        } catch AppConfigError.BadJson {
+            #expect(true)
+        } catch {
+            #expect(Bool(false), Comment(stringLiteral:desc4))
+        }
+        let c5 = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad5.json")
+        let desc5 = "Malformed root"
+        do {
+            let a = try AppConfig(from:c5)
+            #expect(a.Root.count == 0)
+        } catch AppConfigError.BadJson {
+            #expect(true)
+        } catch {
+            #expect(Bool(false), Comment(stringLiteral:desc5 + " \(error)"))
+        }
+    }
+
 }
 
 
