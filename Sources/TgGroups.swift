@@ -10,18 +10,18 @@ import Logging
 
 struct TgGroupsIterator: IteratorProtocol {
     typealias Element = String
-    var dbRows: AnyIterator<Row>? = nil
+    var iterator: AnyIterator<Row>? = nil
     var col: Expression<String>
 
     init(rows: AnySequence<Row>?, column:Expression<String>) {
         if let r = rows {
-            dbRows = r.makeIterator()
+            iterator = r.makeIterator()
         }
         col = column
     }
 
     mutating func next() -> String? {
-        return dbRows?.next()?[col]
+        return iterator?.next()?[col]
     }
 }
 
