@@ -17,7 +17,7 @@ func main() {
         for code in tg.search(terms:["struc"]) {
             print("search programming \(code) \(tg[code]!.0)")
         }
-        print("There are \(tg.starts(with:"ict").count) ICT units")
+        print("There are \(tg.count) ICT units")
     } else {
         logger.critical("failed to connect to database. please check \(configFile.absoluteString)")
     }
