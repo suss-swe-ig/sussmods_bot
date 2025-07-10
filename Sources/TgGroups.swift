@@ -12,11 +12,23 @@ struct TgGroupsIterator: Sequence, IteratorProtocol {
     typealias Element = String
     let iterator: AnyIterator<Row>?
     let col: Expression<String>
+    private var n: Int? 
 
-    init(rows: AnySequence<Row>?, column:Expression<String>) {
+    var count: Int {
+        get { 
+            if let c = n {
+                return c 
+            }
+            return 0
+         }
+    }
+
+    init(rows: AnySequence<Row>?, column:Expression<String>, count:Int?) {
         iterator = rows?.makeIterator()
         col = column
+        n = count
     }
+
 
     func makeIterator() -> TgGroupsIterator {
         return self
@@ -106,17 +118,17 @@ class TgGroups: Sequence {
     /// This function retrieves the list of telegram group of which their unit code starts with the given prefix
     /// - Parameter prefix: prefix for unit code
     /// - Returns: A list of unit code
-    func startsWith(prefix:String) -> TgGroupsIterator {
+    func starts(with prefix:String) -> TgGroupsIterator {
         if prefix.isAlphanumeric {
             let query = table.select(uCode).filter(uCode.like(prefix+"%"))
-            return TgGroupsIterator(rows: try? db.prepare(query), column:uCode)
+            return TgGroupsIterator(rows: try? db.prepare(query), column:uCode, count: try? db.scalar(query.count))
         }
-        return TgGroupsIterator(rows:nil, column:uCode)
+        return TgGroupsIterator(rows:nil, column:uCode, count:nil)
     }
 
     func makeIterator() -> TgGroupsIterator {
         let query = table.select(uCode)
-        return TgGroupsIterator(rows: try? db.prepare(query), column: uCode)
+        return TgGroupsIterator(rows: try? db.prepare(query), column: uCode, count: try? db.scalar(query.count))
     }
 
     /// Perform search on unit name
@@ -135,10 +147,10 @@ class TgGroups: Sequence {
             }
             if let likes_ = likes {
                 let query = table.select(uCode).filter(likes_)
-                return TgGroupsIterator(rows:try? db.prepare(query), column: uCode)
+                return TgGroupsIterator(rows:try? db.prepare(query), column: uCode, count: try? db.scalar(query.count))
             }
         }
-        return TgGroupsIterator(rows:nil, column: uCode)
+        return TgGroupsIterator(rows:nil, column: uCode, count: nil)
     }
 }
 
