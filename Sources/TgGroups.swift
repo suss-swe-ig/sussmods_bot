@@ -60,6 +60,15 @@ class TgGroups: Sequence {
     let link = Expression<String>("link")
     var db: Connection
     
+    var count:Int {
+        get {
+            if let n = try? db.scalar(table.count) {
+                return n
+            }
+            return 0
+        }
+    }
+    
     /// Constructor
     /// - Parameter conn: An sqlite3 database connection 
     init(conn:Connection) {
