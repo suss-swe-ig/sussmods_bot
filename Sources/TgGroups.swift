@@ -143,7 +143,7 @@ class TgGroups: Sequence {
     /// Perform search on unit name
     /// - Paramter terms is a list of search terms
     func search(for terms:[String]) -> TgGroupsIterator {
-        let terms_ = terms.filter { s in s.count > 1 && s.isAlphanumeric } 
+        let terms_ = terms.filter { (s: String) in s.count > 1 && s.isAlphanumeric } 
         guard terms_.count > 0 else {
             return TgGroupsIterator(rows:nil, column: uCode, count: nil)
         }
