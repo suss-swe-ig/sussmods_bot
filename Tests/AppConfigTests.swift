@@ -48,7 +48,7 @@ struct AppConfigTests {
         do {
             let _ = try AppConfig(from:c1)
             logger.info("\(desc1) triggers no error")
-        } catch AppConfigError.EmptyAPIKey {
+        } catch AppConfigError.EmptyAPIKeyField {
             logger.info("\(desc1) detected")
             #expect(true)
         } catch {
@@ -60,7 +60,7 @@ struct AppConfigTests {
         do {
             let _ = try AppConfig(from:c2)
             logger.info("\(desc2) triggers no error")
-        } catch AppConfigError.EmptyDatabase {
+        } catch AppConfigError.EmptyDatabaseField {
             logger.info("\(desc2) detected")
             #expect(true)
         } catch {
