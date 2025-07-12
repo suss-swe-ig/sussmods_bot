@@ -117,8 +117,8 @@ struct AppConfigTests {
         }
     }
 
-    @Test func goodJsonTest() {
-        let logger = Logger(label:"AppConfigTests:goodJsonTest")
+    @Test func GoodJsonTest() {
+        let logger = Logger(label:"AppConfigTests:GoodJsonTest")
 
         let c0 = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/good0.json")
         let desc0 = "Malformed root"
