@@ -14,6 +14,7 @@ struct AppConfigTests {
         do {
             let _ = try AppConfig(from:configFile)
             logger.info("\(desc) triggers no error")
+            #expect(Bool(false), Comment(stringLiteral: desc))
         } catch AppConfigError.NoConfigFile {
             logger.info("\(desc) detected")
             #expect(true)
@@ -31,6 +32,7 @@ struct AppConfigTests {
         do {
             let _ = try AppConfig(from:configFile)
             logger.info("\(desc) triggers no error")
+            #expect(Bool(false), Comment(stringLiteral: desc))
         } catch AppConfigError.EmptyFile {
             logger.info("\(desc) detected")
             #expect(true)
@@ -48,6 +50,7 @@ struct AppConfigTests {
         do {
             let _ = try AppConfig(from:c1)
             logger.info("\(desc1) triggers no error")
+            #expect(Bool(false), Comment(stringLiteral: desc1))
         } catch AppConfigError.EmptyAPIKeyField {
             logger.info("\(desc1) detected")
             #expect(true)
@@ -60,6 +63,7 @@ struct AppConfigTests {
         do {
             let _ = try AppConfig(from:c2)
             logger.info("\(desc2) triggers no error")
+            #expect(Bool(false), Comment(stringLiteral: desc2))
         } catch AppConfigError.EmptyDatabaseField {
             logger.info("\(desc2) detected")
             #expect(true)
@@ -77,6 +81,7 @@ struct AppConfigTests {
         let desc0 = "Broken Syntax"
         do {
             let _ = try AppConfig(from:c0)
+            #expect(Bool(false), Comment(stringLiteral:desc0))
         } catch AppConfigError.BadJson {
             logger.info("\(desc0) detected")
             #expect(true)
@@ -87,6 +92,7 @@ struct AppConfigTests {
         let desc3 = "Missing APIKey field"
         do {
             let _ = try AppConfig(from:c3)
+            #expect(Bool(false), Comment(stringLiteral:desc3))
         } catch AppConfigError.BadJson {
             logger.info("\(desc3) detected")
             #expect(true)
@@ -97,6 +103,7 @@ struct AppConfigTests {
         let desc4 = "Missing Database field"
         do {
             let _ = try AppConfig(from:c4)
+            #expect(Bool(false), Comment(stringLiteral:desc4))
         } catch AppConfigError.BadJson {
             logger.info("\(desc4) detected")
             #expect(true)
@@ -108,6 +115,7 @@ struct AppConfigTests {
         do {
             let _ = try AppConfig(from:c5)
             logger.info("\(desc5) not detected")
+            #expect(Bool(false))
         } catch AppConfigError.BadJson {
             logger.info("\(desc5) detected")
             #expect(true)
