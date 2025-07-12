@@ -3,11 +3,12 @@ import SQLite
 import Foundation
 
 enum AppConfigError: Error {
-    case BadJson
-    case NoConfigFile
-    case EmptyAPIKey
-    case EmptyDatabase
-    case EmptyFile
+    case BadJson(at:URL)
+    case NoConfigFile(at:URL)
+    case EmptyAPIKeyField
+    case EmptyDatabaseField
+    case EmptyFile(at:URL)
+    case CannotReadFile(at:URL)
 }
 
 struct Config: Codable {
@@ -40,32 +41,31 @@ struct AppConfig {
 
     init(from url:URL) throws {
         let logger = Logger(label:"AppConfig")
-        guard FileManager().fileExists(atPath: url.absoluteString) else { 
+        guard FileManager.default.fileExists(atPath: url.absoluteString) else { 
             logger.critical("Cannot find \(url.absoluteString)")
-            throw AppConfigError.NoConfigFile
+            throw AppConfigError.NoConfigFile(at:url)
         }
-        if let json = try? String(contentsOfFile: url.absoluteString) {
+        if let json = try? String(contentsOfFile: url.absoluteString).data(using: .utf8) {
             guard json.count > 0 else {
-                throw AppConfigError.EmptyFile
+                throw AppConfigError.EmptyFile(at:url)
             }
-            let jsonData = json.data(using: .utf8)!
-            if let decoded = try? JSONDecoder().decode(Config.self, from: jsonData) {
+            if let decoded = try? JSONDecoder().decode(Config.self, from: json) {
                 guard !decoded.APIKey.isEmpty else { 
                     logger.critical("Missing API Key")
-                    throw AppConfigError.EmptyAPIKey 
+                    throw AppConfigError.EmptyAPIKeyField
                 }
                 guard !decoded.Database.isEmpty else { 
                     logger.critical("Missing Database File")
-                    throw AppConfigError.EmptyDatabase 
+                    throw AppConfigError.EmptyDatabaseField
                 }
                 config = decoded 
             } else {
                 logger.critical("unable to decode \(url.absoluteString)")
-                throw AppConfigError.BadJson
+                throw AppConfigError.BadJson(at:url)
             }
         } else {
             logger.critical("unable to read \(url.absoluteString)")
-            throw AppConfigError.NoConfigFile
+            throw AppConfigError.CannotReadFile(at:url)
         }
     }
 
