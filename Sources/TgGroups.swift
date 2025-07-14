@@ -58,7 +58,7 @@ class TgGroups: Sequence {
     let uCode = Expression<String>("unit_code")
     let uName = Expression<String>("unit_name")
     let link = Expression<String>("link")
-    var db: Connection
+    var db: Database
     
     var count:Int {
         get {
@@ -71,26 +71,10 @@ class TgGroups: Sequence {
     
     /// Constructor
     /// - Parameter conn: An sqlite3 database connection 
-    init(conn:Connection) {
-        db = conn
-        createTable()
+    init(connectTo: Database) {
+        db = connectTo
     }
-       
-    private func createTable() {
-        do {
-            try db.execute(table.create { (t:TableBuilder) in
-                t.column(uCode, primaryKey: true)
-                t.column(uName)
-                t.column(link)
-            })
-            logger.info("telegram_groups table created")
-        } catch {
-            // if the table already exists, this would result in error
-            // don't do anything
-            logger.info("telegram_groups table found in database")
-        }
-    }
-    
+   
     subscript(code:String) -> (String,String)? {
         get {
             let query = table.select(uCode, uName, link).filter(uCode == code.uppercased())
