@@ -7,7 +7,7 @@ import Logging
 struct AppConfigTests {
     let fm = FileManager()
     
-    @Test func MissingFileTest() {
+    @Test func MissingFileTest() async {
         let logger = Logger(label:"AppConfigTests:MissingFileTest")
         let configFile = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/nosuchfile.json")
         let desc = "No config file"
@@ -24,7 +24,7 @@ struct AppConfigTests {
         } 
     }
 
-    @Test func EmptyFileTest() {
+    @Test func EmptyFileTest() async {
         let logger = Logger(label:"AppConfigTests:EmptyFileTest")
 
         let configFile = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/empty.json")
@@ -42,7 +42,7 @@ struct AppConfigTests {
         } 
     }
 
-    @Test func EmptyFieldTest() {
+    @Test func EmptyFieldTest() async {
         let logger = Logger(label:"AppConfigTests:EmptyFieldTest")
 
         let c1 = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad1.json")
@@ -74,7 +74,7 @@ struct AppConfigTests {
 
     }
 
-    @Test func BadJsonTest() {
+    @Test func BadJsonTest() async {
         let logger = Logger(label:"AppConfigTests:BadJsonTest")
 
         let c0 = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/bad0.json")
@@ -125,7 +125,7 @@ struct AppConfigTests {
         }
     }
 
-    @Test func GoodJsonTest() {
+    @Test func GoodJsonTest() async {
         let logger = Logger(label:"AppConfigTests:GoodJsonTest")
 
         let c0 = URL(string:fm.currentDirectoryPath)!.appendingPathComponent("Tests/good0.json")

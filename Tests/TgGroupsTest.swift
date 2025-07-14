@@ -25,7 +25,7 @@ struct TgGroupsTest {
         }
     }
     
-    @Test func EmptyTest() {
+    @Test func EmptyTest() async {
         let logger = Logger(label:"TgGroupsTest:EmptyTest")
         let url = URL(string: "file://" + FileManager.default.currentDirectoryPath)!.appendingPathComponent("Tests/test.sqlite3")
         with(url:url, logger:logger) { () in 
@@ -47,7 +47,7 @@ struct TgGroupsTest {
         }
     }
 
-    @Test func DataTest() {
+    @Test func DataTest() async {
         let logger = Logger(label:"TgGroupsTest:DataTest")
         let url = URL(string: "file://" + FileManager.default.currentDirectoryPath)!.appendingPathComponent("Tests/db.sqlite3")
 
