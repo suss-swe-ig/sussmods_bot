@@ -14,7 +14,7 @@ func main() {
         // tg["ict162"] = ("Object Oriented Programming", "https://t.me/+91udwbtlw1hmYjE9")
         let (uname, link) = tg["ict133"]!
         print("ict133: \(uname) at \(link)")
-        for code in tg.search(terms:["struc"]) {
+        for code in tg.search(for:["struc"]) {
             print("search programming \(code) \(tg[code]!.0)")
         }
         print("There are \(tg.count) ICT units")
