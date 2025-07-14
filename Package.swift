@@ -28,7 +28,6 @@ let package = Package(
             name: "sussmods_bot_tests",
             dependencies:[
                 "sussmods_bot",
-                "Mockingbird",
                 .product(name: "Testing", package: "swift-testing")
             ],
             exclude: [
