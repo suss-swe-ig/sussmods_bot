@@ -30,7 +30,7 @@ let package = Package(
                 .product(name: "Testing", package: "swift-testing")
             ],
             exclude: [
-                "bad0.json", "bad1.json", "bad2.json", "bad3.json", "bad4.json",
+                "bad0.json", "bad1.json", "bad2.json", "bad3.json", "bad4.json", "bad5.json",
                 "good0.json", "good1.json", "good2.json", "empty.json"
             ]),
         
