@@ -9,7 +9,6 @@ let package = Package(
         .executable(name:"sussmods_bot", targets:["sussmods_bot"])
     ],
     dependencies: [
-        .package(url: "https://github.com/birdrides/mockingbird.git", .upToNextMinor(from: "0.20.0")),
         .package(url: "https://github.com/stephencelis/SQLite.swift.git", from: "0.15.4"),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
         .package(url: "https://github.com/swiftlang/swift-testing.git", branch: "main")
