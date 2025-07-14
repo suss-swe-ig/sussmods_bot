@@ -5,7 +5,7 @@ import Logging
 @testable import sussmods_bot
 
 struct AppConfigTests {
-    let fm = FileManager()
+    let fm = FileManager.default
     
     @Test func MissingFileTest() async {
         let logger = Logger(label:"AppConfigTests:MissingFileTest")
