@@ -6,7 +6,7 @@ import Foundation
 
 func main() {
     let logger = Logger(label:"main")
-    let configFile = URL(string:FileManager().currentDirectoryPath)!.appendingPathComponent("config.json")
+    let configFile = URL(string:"file://" + FileManager().currentDirectoryPath)!.appendingPathComponent("config.json")
     if let config = try? AppConfig(from:configFile), let db = config.getDatabaseConnection() {
         // setup database
         let tg = TgGroups(conn:db)
