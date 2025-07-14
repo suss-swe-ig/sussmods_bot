@@ -17,7 +17,7 @@ struct AppConfigTests {
             #expect(Bool(false), Comment(stringLiteral: desc))
         } catch AppConfigError.NoConfigFile {
             logger.info("\(desc) detected")
-            #expect(true)
+            #expect(Bool(true))
         } catch {
             logger.info("\(desc) not detected")
             #expect(Bool(false), "unknown error \(error)")
@@ -35,7 +35,7 @@ struct AppConfigTests {
             #expect(Bool(false), Comment(stringLiteral: desc))
         } catch AppConfigError.EmptyFile {
             logger.info("\(desc) detected")
-            #expect(true)
+            #expect(Bool(true))
         } catch {
             logger.info("\(desc) not detected")
             #expect(Bool(false), Comment(stringLiteral:"empty config file"))
@@ -53,7 +53,7 @@ struct AppConfigTests {
             #expect(Bool(false), Comment(stringLiteral: desc1))
         } catch AppConfigError.EmptyAPIKeyField {
             logger.info("\(desc1) detected")
-            #expect(true)
+            #expect(Bool(true))
         } catch {
             logger.info("\(desc1) not detected")
             #expect(Bool(false), Comment(stringLiteral: desc1))
@@ -66,7 +66,7 @@ struct AppConfigTests {
             #expect(Bool(false), Comment(stringLiteral: desc2))
         } catch AppConfigError.EmptyDatabaseField {
             logger.info("\(desc2) detected")
-            #expect(true)
+            #expect(Bool(true))
         } catch {
             logger.info("\(desc2) not detected")
             #expect(Bool(false), Comment(stringLiteral: desc2))
@@ -84,7 +84,7 @@ struct AppConfigTests {
             #expect(Bool(false), Comment(stringLiteral:desc0))
         } catch AppConfigError.BadJson {
             logger.info("\(desc0) detected")
-            #expect(true)
+            #expect(Bool(true))
         } catch {
             #expect(Bool(false), Comment(stringLiteral: desc0))
         }
@@ -95,7 +95,7 @@ struct AppConfigTests {
             #expect(Bool(false), Comment(stringLiteral:desc3))
         } catch AppConfigError.BadJson {
             logger.info("\(desc3) detected")
-            #expect(true)
+            #expect(Bool(true))
         } catch {
             #expect(Bool(false), Comment(stringLiteral:desc3))
         }
@@ -106,7 +106,7 @@ struct AppConfigTests {
             #expect(Bool(false), Comment(stringLiteral:desc4))
         } catch AppConfigError.BadJson {
             logger.info("\(desc4) detected")
-            #expect(true)
+            #expect(Bool(true))
         } catch {
             #expect(Bool(false), Comment(stringLiteral:desc4))
         }
@@ -118,7 +118,7 @@ struct AppConfigTests {
             #expect(Bool(false))
         } catch AppConfigError.BadJson {
             logger.info("\(desc5) detected")
-            #expect(true)
+            #expect(Bool(true))
         } catch {
             logger.info("\(desc5) not detected")
             #expect(Bool(false), Comment(stringLiteral:desc5 + " \(error)"))
