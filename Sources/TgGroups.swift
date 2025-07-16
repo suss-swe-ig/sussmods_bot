@@ -60,7 +60,7 @@ class TgGroups: Sequence {
     var count:Int {
         get {
             let (table, _, _, _) = db.getTelegramGroups()
-            if let n = try? db.getConnection().scalar(table.count) {
+            if let n = try? conn.scalar(table.count) {
                 return n
             }
             return 0
