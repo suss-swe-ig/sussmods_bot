@@ -18,6 +18,10 @@ class DB {
     let tPrereq = Table("course_prereq")
     let uPrereq = Expression<String>("prereq")
 
+    let tUsers = Table("users")
+    let user = Expression<String>("user")
+    let role = Expression<String>("role")
+
     init(at path:String) {
         db = try! Connection(path) 
         createTables()
@@ -54,9 +58,23 @@ class DB {
         } else {
             logger.info("course_prereq table exists")
         } 
+
+        let query3 = tUsers.create { (t:TableBuilder) in 
+            t.column(user, primaryKey: true)
+            t.column(user)
+        }
+        if let _ = try? db.execute(query3) {
+            logger.info("users table created")
+        } else {
+            logger.info("users table existed")
+        }
     }
 
     func getTelegramGroups() -> (Table, Expression<String>, Expression<String?>, Expression<String?>) {
         return (tCourseInfo, uCode, uName, link)
+    }
+
+    func getUsers() -> (Table, Expression<String>, Expression<String>) {
+        return (tUsers, user, role)
     }
 }
