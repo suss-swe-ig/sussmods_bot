@@ -20,6 +20,7 @@ struct Config: Codable {
 // testing
 struct AppConfig {
     private var config: Config
+    private let db: DB
 
     var APIKey: String {
         get {
@@ -59,6 +60,7 @@ struct AppConfig {
                     throw AppConfigError.EmptyDatabaseField
                 }
                 config = decoded 
+                db = DB(at:config.Database)
             } else {
                 logger.critical("unable to decode \(url.absoluteString)")
                 throw AppConfigError.BadJson(at:url)
@@ -69,7 +71,7 @@ struct AppConfig {
         }
     }
 
-    func getDatabaseConnection() -> Connection? {
-        return try? Connection(Database) 
+    func getDatabase() -> DB {
+        return db
     }
 }
