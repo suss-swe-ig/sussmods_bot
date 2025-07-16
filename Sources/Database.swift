@@ -46,6 +46,8 @@ class DB {
         let query2 = tPrereq.create { (t:TableBuilder) in 
             t.column(uCode, primaryKey: true)
             t.column(uPrereq, primaryKey: true)
+            t.foreignKey(uCode, references: tCourseInfo, uCode)
+            t.foreignKey(uPrereq, references: tCourseInfo, uCode)
         }
         if let _ = try? db.execute(query2) {
             logger.info("course_prereq table created")
