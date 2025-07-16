@@ -29,8 +29,8 @@ struct TgGroupsTest {
         let logger = Logger(label:"TgGroupsTest:EmptyTest")
         let url = URL(string: "file://" + FileManager.default.currentDirectoryPath)!.appendingPathComponent("Tests/test.sqlite3")
         with(url:url, logger:logger) { () in 
-            let db = try! Connection(url.absoluteString)
-            let test = TgGroups(conn:db)
+            let db = DB(at:url.absoluteString)
+            let test = TgGroups(db)
 
             if let (uname, link) = test["ict133"] {
                 #expect(Bool(false), Comment(stringLiteral:"Empty database yields \(uname) and \(link)"))
@@ -51,7 +51,7 @@ struct TgGroupsTest {
         let logger = Logger(label:"TgGroupsTest:DataTest")
         let url = URL(string: "file://" + FileManager.default.currentDirectoryPath)!.appendingPathComponent("Tests/db.sqlite3")
 
-        let table = Table("telegram_groups")
+        let table = Table("course_info")
         let uCode = Expression<String>("unit_code")
         let uName = Expression<String>("unit_name")
         let link = Expression<String>("link")
@@ -87,11 +87,8 @@ struct TgGroupsTest {
 
         with(url:url, logger:logger) { () in 
             // create database
-            guard let db = try? Connection(url.absoluteString) else {
-                logger.error("failed to create database \(url.absoluteString)")
-                #expect(Bool(false))
-                return
-            }
+            let database = DB(at:url.absoluteString)
+            let db = database.getConnection()
             do {
                 // create table
                 try db.execute(table.create { (t:TableBuilder) in
@@ -110,7 +107,7 @@ struct TgGroupsTest {
                 }
                 logger.info("inserted test data successfully")
                 // begin testing
-                let test = TgGroups(conn:db)
+                let test = TgGroups(database)
 
                 // check ict114
                 let ucode = "ict114"
@@ -163,7 +160,11 @@ struct TgGroupsTest {
                 let correctResult =  ["ICT114", "ICT133", "ICT162", "ICT233", "ICT239", "ICT246", "ICT259", "ICT235", "ICT325", "ICT323", "ICT318"]
                 #expect(ict.count == correctResult.count, "wrong count of ICT mods")
                 for ucode in correctResult {
-                    #expect(ictList.contains(ucode), "Missing unit \(ucode) in ict list")
+                    if ictList.contains(ucode) {
+                        #expect(Bool(true), "Missing unit \(ucode) in ict list")
+                    } else {
+                        #expect(Bool(false), "Missing unit \(ucode) in ict list")
+                    }
                 }
             } catch {
                 logger.error("\(error)")
