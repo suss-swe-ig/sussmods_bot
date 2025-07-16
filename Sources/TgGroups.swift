@@ -54,13 +54,13 @@ struct TgGroupsIterator: Sequence, IteratorProtocol {
 /// String representing the unit name and its telegram link.
 class TgGroups: Sequence {
     let logger = Logger(label: "TgGroups")
-    let table:Table, uCode:Expression<String>, uName:Expression<String?>, link:Expression<String?> 
-
-    var db: Connection
+    var db: DB
+    var conn: Connection
 
     var count:Int {
         get {
-            if let n = try? db.scalar(table.count) {
+            let (table, _, _, _) = db.getTelegramGroups()
+            if let n = try? db.getConnection().scalar(table.count) {
                 return n
             }
             return 0
@@ -70,15 +70,16 @@ class TgGroups: Sequence {
     /// Constructor
     /// - Parameter conn: An sqlite3 database connection 
     init(_ connectTo: DB) {
-        db = connectTo.getConnection()
-        (table, uCode, uName, link) = connectTo.getTelegramGroups()
+        db = connectTo
+        conn = connectTo.getConnection()
     }
    
     subscript(code:String) -> (String,String)? {
         get {
+            let (table, uCode, uName, link) = db.getTelegramGroups()
             let query = table.select(uName, link).filter(uCode == code.uppercased())
             do {
-                for row in try db.prepare(query) {
+                for row in try conn.prepare(query) {
                     if let uname = row[uName], let ulink = row[link] {
                         return (uname, ulink)
                     } else {
@@ -90,10 +91,11 @@ class TgGroups: Sequence {
             return nil
         }
         set(newValue) {
+            let (table, uCode, uName, link) = db.getTelegramGroups()
             if let (uname, ulink) = newValue {
                 let query = table.upsert(uCode <- code.uppercased(), uName <- uname, link <- ulink, onConflictOf: uCode)
                 do {
-                    try db.run(query)
+                    try conn.run(query)
                     logger.info("added \(code.uppercased()): \(uname), link: \(ulink)")
                 } catch {
                     logger.error("failed to update \(code.uppercased()) becase \(error)")
@@ -101,7 +103,7 @@ class TgGroups: Sequence {
             } else {
                 let query = table.filter(uCode == code.uppercased()).delete()
                 do {
-                    try db.run(query)
+                    try conn.run(query)
                     logger.info("deleted \(code.uppercased())")
                 } catch {
                     logger.error("failed to delete \(code.uppercased())")
@@ -115,21 +117,24 @@ class TgGroups: Sequence {
     /// - Parameter prefix: prefix for unit code
     /// - Returns: A list of unit code
     func starts(with prefix:String) -> TgGroupsIterator {
+        let (table, uCode, _, _) = db.getTelegramGroups()
         if prefix.isAlphanumeric {
             let query = table.select(uCode).filter(uCode.like(prefix+"%"))
-            return TgGroupsIterator(rows: try? db.prepare(query), column:uCode, count: try? db.scalar(query.count))
+            return TgGroupsIterator(rows: try? conn.prepare(query), column:uCode, count: try? conn.scalar(query.count))
         }
         return TgGroupsIterator(rows:nil, column:uCode, count:nil)
     }
 
     func makeIterator() -> TgGroupsIterator {
+        let (table, uCode, _, _) = db.getTelegramGroups()
         let query = table.select(uCode)
-        return TgGroupsIterator(rows: try? db.prepare(query), column: uCode, count: try? db.scalar(query.count))
+        return TgGroupsIterator(rows: try? conn.prepare(query), column: uCode, count: try? conn.scalar(query.count))
     }
 
     /// Perform search on unit name
     /// - Paramter terms is a list of search terms
     func search(for terms:[String]) -> TgGroupsIterator {
+        let (table, uCode, uName, _) = db.getTelegramGroups()
         let terms_ = terms.filter { (s: String) in s.count > 1 && s.isAlphanumeric } 
         guard terms_.count > 0 else {
             return TgGroupsIterator(rows:nil, column: uCode, count: nil)
@@ -139,7 +144,7 @@ class TgGroups: Sequence {
             likes = likes || uName.like("%" + term + "%")
         }
         let query = table.select(uCode).filter(likes)
-        return TgGroupsIterator(rows:try? db.prepare(query), column: uCode, count: try? db.scalar(query.count))
+        return TgGroupsIterator(rows:try? conn.prepare(query), column: uCode, count: try? conn.scalar(query.count))
     }
 }
 
