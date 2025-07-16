@@ -54,12 +54,10 @@ struct TgGroupsIterator: Sequence, IteratorProtocol {
 /// String representing the unit name and its telegram link.
 class TgGroups: Sequence {
     let logger = Logger(label: "TgGroups")
-    let table = Table("telegram_groups")
-    let uCode = Expression<String>("unit_code")
-    let uName = Expression<String>("unit_name")
-    let link = Expression<String>("link")
-    var db: Database
-    
+    let table:Table, uCode:Expression<String>, uName:Expression<String?>, link:Expression<String?> 
+
+    var db: Connection
+
     var count:Int {
         get {
             if let n = try? db.scalar(table.count) {
@@ -71,16 +69,21 @@ class TgGroups: Sequence {
     
     /// Constructor
     /// - Parameter conn: An sqlite3 database connection 
-    init(connectTo: Database) {
-        db = connectTo
+    init(_ connectTo: DB) {
+        db = connectTo.getConnection()
+        (table, uCode, uName, link) = connectTo.getTelegramGroups()
     }
    
     subscript(code:String) -> (String,String)? {
         get {
-            let query = table.select(uCode, uName, link).filter(uCode == code.uppercased())
+            let query = table.select(uName, link).filter(uCode == code.uppercased())
             do {
-                for tg in try db.prepare(query) {
-                    return (tg[uName], tg[link])
+                for row in try db.prepare(query) {
+                    if let uname = row[uName], let ulink = row[link] {
+                        return (uname, ulink)
+                    } else {
+                        break
+                    }
                 }
             } catch {}
             // if query yields no result
@@ -93,7 +96,7 @@ class TgGroups: Sequence {
                     try db.run(query)
                     logger.info("added \(code.uppercased()): \(uname), link: \(ulink)")
                 } catch {
-                    logger.error("failed to update \(code.uppercased())")
+                    logger.error("failed to update \(code.uppercased()) becase \(error)")
                 }
             } else {
                 let query = table.filter(uCode == code.uppercased()).delete()
