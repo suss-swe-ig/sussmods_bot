@@ -33,17 +33,17 @@ struct TgGroupsTest {
             let test = TgGroups(db)
 
             if let (uname, link) = test["ict133"] {
-                #expect(Bool(false), Comment(stringLiteral:"Empty database yields \(uname) and \(link)"))
+                #expect(Bool(false), "Empty database yields \(uname) and \(link)")
             } else {
-                #expect(Bool(true), Comment(stringLiteral: "Empty database yields nil"))
+                #expect(Bool(true), "Empty database yields nil")
             }
 
             let searchResult = test.search(for: ["ict133"])
             for ucode in searchResult {
                 logger.info("detected non-nil search result")
-                #expect(Bool(false), Comment(stringLiteral:"Empty database yields non-nil search result \(ucode)"))
+                #expect(Bool(false), "Empty database yields non-nil search result \(ucode)")
             }
-            #expect(searchResult.count == 0, Comment(stringLiteral:"Empty database yields 0 search result"))
+            #expect(searchResult.count == 0, "Empty database yields 0 search result")
         }
     }
 
