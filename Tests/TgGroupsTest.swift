@@ -160,11 +160,7 @@ struct TgGroupsTest {
                 let correctResult =  ["ICT114", "ICT133", "ICT162", "ICT233", "ICT239", "ICT246", "ICT259", "ICT235", "ICT325", "ICT323", "ICT318"]
                 #expect(ict.count == correctResult.count, "wrong count of ICT mods")
                 for ucode in correctResult {
-                    if ictList.contains(ucode) {
-                        #expect(Bool(true), "Missing unit \(ucode) in ict list")
-                    } else {
-                        #expect(Bool(false), "Missing unit \(ucode) in ict list")
-                    }
+                    #expect(ictList.contains(ucode), "Missing unit \(ucode) in ict list")
                 }
             } catch {
                 logger.error("\(error)")
