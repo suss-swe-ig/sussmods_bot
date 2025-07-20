@@ -2,7 +2,7 @@ import Logging
 import SQLite
 import Foundation
 
-enum AppConfigError: Error {
+enum AppConfigError: Error, Equatable {
     case BadJson(at:URL)
     case NoConfigFile(at:URL)
     case EmptyAPIKeyField
