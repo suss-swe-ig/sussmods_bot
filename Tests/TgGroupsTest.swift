@@ -41,10 +41,14 @@ struct TgGroupsTest {
         let logger = Logger(label:"TgGroupsTest:DataTest")
         let url = URL(string: "file://" + FileManager.default.currentDirectoryPath)!.appendingPathComponent("Tests/db.sqlite3")
 
-        let table = Table("course_info")
+        let tCourseInfo = Table("course_info")
         let uCode = Expression<String>("unit_code")
-        let uName = Expression<String>("unit_name")
-        let link = Expression<String>("link")
+        let uName = Expression<String?>("unit_name")
+        let link = Expression<String?>("link")
+        let uDesc = Expression<String?>("unit_desc")
+        let credit = Expression<Double?>("credit")
+        let semester = Expression<String?>("semester")
+        let special = Expression<Bool?>("special")
 
         let testData = [
             ("ICT114", "Computer Architecture", "https://t.me/ict114"),
@@ -81,15 +85,19 @@ struct TgGroupsTest {
             let db = database.getConnection()
             do {
                 // create table
-                try db.execute(table.create { (t:TableBuilder) in
+                try db.execute(tCourseInfo.create { (t:TableBuilder) in
                     t.column(uCode, primaryKey: true)
                     t.column(uName)
                     t.column(link)
-                    logger.info("created table telegram_groups")
+                    t.column(uDesc)
+                    t.column(credit)
+                    t.column(semester)
+                    t.column(special)
+                    logger.info("created table course_info")
                 })
                 // insert test data
                 for (ucode, uname, ulink) in testData {
-                    let query = table.insert(uCode <- ucode, uName <- uname, link <- ulink)
+                    let query = tCourseInfo.insert(uCode <- ucode, uName <- uname, link <- ulink)
                     guard let _ = try? db.run(query) else {
                         logger.error("failed to insert test data for \(ucode) into database")
                         return
