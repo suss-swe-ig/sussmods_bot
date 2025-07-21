@@ -100,6 +100,7 @@ struct TgGroupsTest {
                     let query = tCourseInfo.insert(uCode <- ucode, uName <- uname, link <- ulink)
                     guard let _ = try? db.run(query) else {
                         logger.error("failed to insert test data for \(ucode) into database")
+                        #expect(Bool(false), "Failed to insert test data")
                         return
                     }
                 }
@@ -117,21 +118,21 @@ struct TgGroupsTest {
                 }
 
                 // update unit name
-                if let (_, ulink1) = test["ict133"] {
-                    test["ict133"] = ("Structured Programming with Python", ulink1)
-                }
-                if let (uname2, ulink2) = test["ict133"] {
-                    #expect(uname2 == "Structured Programming with Python", "wrong unit name after update")
-                    #expect(ulink2 == "https://t.me/ict133", "wrong link after update")
-                }
+                let (_, ulink1) = test["ict133"]!
+                let uname1 = "Structured Programming with Python"
+                test["ict133"] = (uname1, ulink1)
+
+                let (uname2, ulink2) = test["ict133"]!
+                #expect(uname2 == uname1, "wrong unit name after update")
+                #expect(ulink2 == ulink1, "wrong link after update")
 
                 // update unit name and link
-                if let _ = test["ict162"] {
-                    test["ict162"] = ("Object Oriented Programming with Python", "https://t.me/ict162_")
-                }
-                if let (uname3, ulink3) = test["ict162"] {
-                    #expect(uname3 == "Object Oriented Programming with Python", "wrong unit name after update")
-                    #expect(ulink3 == "https://t.me/ict162_", "wrong link after update")
+                let uname3 = "Object Oriented Programming with Python"
+                let ulink3 = "https://t.me/ict162_"
+                test["ict162"] = (uname3, ulink3)
+                if let (uname4, ulink4) = test["ict162"] {
+                    #expect(uname3 == uname4, "wrong unit name after update")
+                    #expect(ulink3 == ulink4, "wrong link after update")
                 }
 
                 // search for python 
@@ -143,12 +144,8 @@ struct TgGroupsTest {
                 // delete unit
                 let (uname4, ulink4) = test["mth105"]!
                 test["mth105"] = nil
-                if let _ = test["mth105"] {
-                    #expect(Bool(false), "Failed to delete MTH105")
-                } else {
-                    #expect(Bool(true))
-                    test["mth105"] = (uname4, ulink4)
-                }
+                #expect(test["mth105"] == nil, "Failed to delete MTH105")
+                test["mth105"] = (uname4, ulink4)
 
                 // list all ICT units
                 let ict = test.starts(with:"ict")
