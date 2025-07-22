@@ -61,7 +61,7 @@ class DB {
 
         let query3 = tUsers.create { (t:TableBuilder) in 
             t.column(user, primaryKey: true)
-            t.column(user)
+            t.column(role)
         }
         if let _ = try? db.execute(query3) {
             logger.info("users table created")
