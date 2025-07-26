@@ -7,7 +7,7 @@ import SQLite
 
 struct TgGroupsTest {
 
-    func with(url:URL, logger:Logger, closure: () -> Void) {
+    func with<T>(url:URL, logger:Logger, closure: () -> T) ->  T  {
         if FileManager.default.fileExists(atPath: url.absoluteString) {
             do {
                 try FileManager.default.removeItem(at:url)
@@ -16,13 +16,14 @@ struct TgGroupsTest {
                 logger.info("start of test: failed to remove \(url) because \(error)")
             }
         }
-        closure()
+        let result = closure()
         do {
             try FileManager.default.removeItem(at:url)
             logger.info("end of test: removed \(url)")
         } catch {
             logger.info("end of test: failed to remove \(url) because \(error)")
         }
+        return result
     }
     
     @Test func EmptyTest() async {
